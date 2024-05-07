@@ -1,7 +1,7 @@
 pipeline {
     agent any; 
     environment {
-       MY_CRED = credentials('ayushi')
+       MY_CRED = credentials('azurelogin')
     } 
     stages {
         stage('Git checkout'){
@@ -18,7 +18,7 @@ pipeline {
             steps{
                     sh """                    
                     echo "Initialising Terraform"
-                    terraform init
+                    terraform
                     """
             }
         }
@@ -33,7 +33,7 @@ pipeline {
         stage('Terraform Plan'){
             steps {
                     withCredentials([azureServicePrincipal(
-                    credentialsId: 'ayushi',
+                    credentialsId: 'azurelogin',
                     subscriptionIdVariable: 'ARM_SUBSCRIPTION_ID',
                     clientIdVariable: 'ARM_CLIENT_ID',
                     clientSecretVariable: 'ARM_CLIENT_SECRET',
@@ -49,7 +49,7 @@ pipeline {
         stage('Terraform apply') {
             steps {
                 withCredentials([azureServicePrincipal(
-                credentialsId: 'ayushi',
+                credentialsId: 'azurelogin',
                 subscriptionIdVariable: 'ARM_SUBSCRIPTION_ID',
                 clientIdVariable: 'ARM_CLIENT_ID',
                 clientSecretVariable: 'ARM_CLIENT_SECRET',
